@@ -26,7 +26,6 @@ class ChatController extends Controller
      */
     public function sendMessage(Request $request)
     {
-        // $user = User::find($request->fromuserid);
         $message = [
             "id" => $request->userid,
             "sourceuserid" => Auth::user()->id,
@@ -41,6 +40,6 @@ class ChatController extends Controller
     {
        
         $users = User::take(10)->get();
-        return view('chat',['users'=> $users]);
+        return view('chat2',['users'=> $users]);
     }
 }
