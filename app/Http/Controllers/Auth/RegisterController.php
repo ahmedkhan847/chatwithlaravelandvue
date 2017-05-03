@@ -6,9 +6,6 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Registered;
-use App\Role;
 
 class RegisterController extends Controller
 {
@@ -30,7 +27,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/chat';
 
     /**
      * Create a new controller instance.
@@ -43,17 +40,6 @@ class RegisterController extends Controller
     }
 
     /**
-     * Show the application registration form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showRegistrationForm()
-    {
-        $role = Role::all();
-        return view('auth.register',['roles' => $role]);
-    }
-
-    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -62,11 +48,9 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-            'role' => 'required',
-            // 'g-recaptcha-response' => 'required|recaptcha',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
         ]);
     }
 
@@ -83,23 +67,5 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
-    }
-
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function register(Request $request)
-    {
-        $this->validator($request->all())->validate();
-        event(new Registered($user = $this->create($request->all())));
-        $role = Role::find($request->role);
-        $user->assign($role);
-        $this->guard()->login($user);
-
-        return $this->registered($request, $user)
-                        ?: redirect($this->redirectPath());
     }
 }

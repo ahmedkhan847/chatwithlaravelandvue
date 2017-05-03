@@ -172,10 +172,7 @@ return [
         /*
         * Scafolding Service Providers
         */
-        Amranidev\ScaffoldInterface\ScaffoldInterfaceServiceProvider::class,
-        Amranidev\Ajaxis\AjaxisServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
-        Vinkla\Pusher\PusherServiceProvider::class,
+        
         /*
          * Application Service Providers...
          */
@@ -187,7 +184,7 @@ return [
 
         //Google Recaptcha2
 
-        Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
+        
 
     ],
 
@@ -237,8 +234,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        //Google Recaptcha
-        'Recaptcha' => Greggilbert\Recaptcha\Facades\Recaptcha::class,
 
     ],
 
