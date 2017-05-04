@@ -11288,21 +11288,13 @@ var app = new Vue({
             var _this2 = this;
 
             this.userId = event.target.id;
-            // this.chats[this.userId].push({"message" : this.chatMessage[this.userId] , "name" : window.username});    
             var message = this.chatMessage[this.userId];
-            // this.chats[this.userId].push({"message" : message , "name" : window.username});
-            // this.chatMessage[this.userId] = "";
-
 
             this.$http.post('chat', {
                 'userid': this.userId,
                 'message': message
             }).then(function (response) {
-                // if(this.chatCount[this.userId] >= 0 && this.chatCount[this.userId] != null){
 
-                //     }else{
-                //         this.chatCount[this.userId] = 0;
-                //     }
                 _this2.chatMessage[_this2.userId] = '';
                 _this2.$set(app.chats[_this2.userId], _this2.chatCount[_this2.userId], {
                     "message": message,
@@ -11326,7 +11318,6 @@ var app = new Vue({
 
                 this.chatWindowStatus[userid] = 1;
                 this.chatMessage[userid] = '';
-                // this.chats[userid] = [];
                 this.$set(app.chats, userid, {});
                 this.$set(app.chatCount, userid, 0);
                 this.chatWindows.push({ "senderid": userid, "name": username });

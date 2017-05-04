@@ -2,12 +2,27 @@
 @section('content')
     <div class="row">
     <div class="col-md-3">
-        <ul class="list-group">
-        @foreach($users as $chatuser)
-            <li v-on:click="getUserId" class="list-group-item" id="{{ $chatuser->id }}">{{ $chatuser->name }}</li>
-        @endforeach
+    <div class="panel panel-primary">
+    <div class="panel panel-default">
+                <div class="panel-heading">Users</div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                @foreach($users as $chatuser)
+                    <li v-on:click="getUserId" class="list-group-item" id="{{ $chatuser->id }}">{{ $chatuser->name }}</li>
+                @endforeach
+                    
+                </ul>
+                </div>
+            </div>
+                 
+                {{-- <ul class="list-group">
+                @foreach($users as $chatuser)
+                    <li v-on:click="getUserId" class="list-group-item" id="{{ $chatuser->id }}">{{ $chatuser->name }}</li>
+                @endforeach
+                    
+                </ul> --}}
             
-        </ul>
+        
     </div>
     <div class="col-md-5">
         <div class="panel panel-primary">
