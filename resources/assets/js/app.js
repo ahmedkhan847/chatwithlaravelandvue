@@ -28,23 +28,27 @@ const app = new Vue({
     data: {
         chatMessage : [],
         userId : null,
-        chats : [{"message" : '' , "name" : ""}],
+        chats : [],
         chatWindows : [],
         chatStatus : 0,
+        chatWindowStatus : [],
+        chatCount : [] 
     },
     created(){
         window.Echo.channel('chat-message'+window.userid)
             .listen('ChatMessage', (e) => {
                 console.log(e.user);
-                if(this.chats[e.user.sourceuserid]){
-                    this.chats[e.user.sourceuserid].push(e.user);
-                    console.log("pusher");
-                    console.log(this.chats);
-                    this.userId = e.user.sourceuserid;
+                this.userId = e.user.sourceuserid;
+                if(this.chats[this.userId]){
                     this.show = 1;
+                    this.$set(app.chats[this.userId], this.chatCount[this.userId] ,e.user);
+                    this.chatCount[this.userId]++;
+                    console.log("pusher");
+                    console.log(this.chats[this.userId]);                   
                 }else{
                     this.createChatWindow(e.user.sourceuserid,e.user.name)
-                    this.chats[e.user.sourceuserid].push(e.user);
+                    this.$set(app.chats[this.userId], this.chatCount[this.userId] ,e.user);
+                    this.chatCount[this.userId]++;
                 }
                 
         });
@@ -59,14 +63,26 @@ const app = new Vue({
             this.userId = event.target.id;
             // this.chats[this.userId].push({"message" : this.chatMessage[this.userId] , "name" : window.username});    
             var message = this.chatMessage[this.userId];
-            this.chats[this.userId].push({"message" : message , "name" : window.username});
+            // this.chats[this.userId].push({"message" : message , "name" : window.username});
             // this.chatMessage[this.userId] = "";
+            
+            
             this.$http.post('chat',{
                 'userid' : this.userId,
                 'message' : message
             }).then(response => {
+                // if(this.chatCount[this.userId] >= 0 && this.chatCount[this.userId] != null){
+                        
+                //     }else{
+                //         this.chatCount[this.userId] = 0;
+                //     }
+                this.chatMessage[this.userId] = '';
+                this.$set(app.chats[this.userId], this.chatCount[this.userId] , {
+                    "message": message, 
+                    "name" : window.username
+            });
+            this.chatCount[this.userId]++;
                 console.log("send");
-                // message = null;
             }, response => {
                 this.error = 1;
                 console.log("error");
@@ -79,9 +95,16 @@ const app = new Vue({
         console.log(this.userId);
     },
     createChatWindow(userid,username){
-        this.chatMessage[userid] = '';
-        this.chats[userid] = [];
-        this.chatWindows.push({"senderid" : userid , "name" : username});
+        if(!this.chatWindowStatus[userid]){
+            
+            this.chatWindowStatus[userid] = 1;
+            this.chatMessage[userid] = '';
+            // this.chats[userid] = [];
+            this.$set(app.chats, userid , {});
+            this.$set(app.chatCount, userid , 0);
+            this.chatWindows.push({"senderid" : userid , "name" : username});
+        }
+        
     }
 }});
 

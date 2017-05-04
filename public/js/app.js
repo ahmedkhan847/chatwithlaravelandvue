@@ -11252,24 +11252,28 @@ var app = new Vue({
     data: {
         chatMessage: [],
         userId: null,
-        chats: [{ "message": '', "name": "" }],
+        chats: [],
         chatWindows: [],
-        chatStatus: 0
+        chatStatus: 0,
+        chatWindowStatus: [],
+        chatCount: []
     },
     created: function created() {
         var _this = this;
 
         window.Echo.channel('chat-message' + window.userid).listen('ChatMessage', function (e) {
             console.log(e.user);
-            if (_this.chats[e.user.sourceuserid]) {
-                _this.chats[e.user.sourceuserid].push(e.user);
-                console.log("pusher");
-                console.log(_this.chats);
-                _this.userId = e.user.sourceuserid;
+            _this.userId = e.user.sourceuserid;
+            if (_this.chats[_this.userId]) {
                 _this.show = 1;
+                _this.$set(app.chats[_this.userId], _this.chatCount[_this.userId], e.user);
+                _this.chatCount[_this.userId]++;
+                console.log("pusher");
+                console.log(_this.chats[_this.userId]);
             } else {
                 _this.createChatWindow(e.user.sourceuserid, e.user.name);
-                _this.chats[e.user.sourceuserid].push(e.user);
+                _this.$set(app.chats[_this.userId], _this.chatCount[_this.userId], e.user);
+                _this.chatCount[_this.userId]++;
             }
         });
     },
@@ -11286,14 +11290,26 @@ var app = new Vue({
             this.userId = event.target.id;
             // this.chats[this.userId].push({"message" : this.chatMessage[this.userId] , "name" : window.username});    
             var message = this.chatMessage[this.userId];
-            this.chats[this.userId].push({ "message": message, "name": window.username });
+            // this.chats[this.userId].push({"message" : message , "name" : window.username});
             // this.chatMessage[this.userId] = "";
+
+
             this.$http.post('chat', {
                 'userid': this.userId,
                 'message': message
             }).then(function (response) {
+                // if(this.chatCount[this.userId] >= 0 && this.chatCount[this.userId] != null){
+
+                //     }else{
+                //         this.chatCount[this.userId] = 0;
+                //     }
+                _this2.chatMessage[_this2.userId] = '';
+                _this2.$set(app.chats[_this2.userId], _this2.chatCount[_this2.userId], {
+                    "message": message,
+                    "name": window.username
+                });
+                _this2.chatCount[_this2.userId]++;
                 console.log("send");
-                // message = null;
             }, function (response) {
                 _this2.error = 1;
                 console.log("error");
@@ -11306,9 +11322,15 @@ var app = new Vue({
             console.log(this.userId);
         },
         createChatWindow: function createChatWindow(userid, username) {
-            this.chatMessage[userid] = '';
-            this.chats[userid] = [];
-            this.chatWindows.push({ "senderid": userid, "name": username });
+            if (!this.chatWindowStatus[userid]) {
+
+                this.chatWindowStatus[userid] = 1;
+                this.chatMessage[userid] = '';
+                // this.chats[userid] = [];
+                this.$set(app.chats, userid, {});
+                this.$set(app.chatCount, userid, 0);
+                this.chatWindows.push({ "senderid": userid, "name": username });
+            }
         }
     } });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)))

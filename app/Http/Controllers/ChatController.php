@@ -40,6 +40,6 @@ class ChatController extends Controller
     {
        
         $users = User::take(10)->get();
-        return view('chat2',['users'=> $users]);
+        return view('chat',['users'=> $users]);
     }
 }
