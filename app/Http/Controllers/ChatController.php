@@ -39,7 +39,7 @@ class ChatController extends Controller
     public function chatPage()
     {
        
-        $users = User::take(10)->get();
+        $users = User::all();
         return view('chat',['users'=> $users]);
     }
 }
