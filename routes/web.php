@@ -1,7 +1,4 @@
 <?php
-use App\Events\TestUserRegister;
-use App\User;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
