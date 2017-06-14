@@ -26,6 +26,12 @@ class ChatController extends Controller
      */
     public function sendMessage(Request $request)
     {
+        
+        $this->validate($request, [
+        'userid' => 'required',
+        'message' => 'required',
+        ]);
+
         $message = [
             "id" => $request->userid,
             "sourceuserid" => Auth::user()->id,
